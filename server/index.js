@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 
 const MovieModel = require("./models/MoviesModel");
 
@@ -8,9 +9,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(
-  "mongodb+srv://AJAY:abcd1234@cluster0.xuwp5.mongodb.net/?retryWrites=true&w=majority"
-);
+const connectionString = process.env.DB_CONNECTION_STRING;
+
+mongoose.connect(connectionString);
 
 //API Reqests
 app.post("/create", (req, res) => {
