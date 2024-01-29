@@ -26,6 +26,35 @@ app.get("/", (req, res) => {
     .catch((e) => res.json(e));
 });
 
+app.get("/getmovie/:id", (req, res) => {
+  const id = req.params.id;
+  MovieModel.findById({ _id: id })
+    .then((movie) => res.json(movie))
+    .catch((e) => res.json(e));
+});
+
+app.put("/updateMovie/:id", (req, res) => {
+  const id = req.params.id;
+  MovieModel.findByIdAndUpdate(
+    { _id: id },
+    {
+      title: req.body.title,
+      genre: req.body.genre,
+      releaseDate: req.body.releaseDate,
+      leadActor: req.body.leadActor,
+    }
+  )
+    .then((movie) => res.json(movie))
+    .catch((e) => res.json(e));
+});
+
+app.delete("/deletemovie/:id", (req, res) => {
+  const id = req.params.id;
+  MovieModel.findByIdAndDelete({ _id: id })
+    .then((movie) => res.json(movie))
+    .catch((e) => res.json(e));
+});
+
 app.listen(3001, () => {
   console.log("Server is running");
 });

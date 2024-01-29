@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Movie() {
   const [movies, setMovies] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -14,6 +16,15 @@ function Movie() {
       .catch((err) => console.error(err));
   }, []);
 
+  const handleDelete = (id) => {
+    axios
+      .delete("http://localhost:3001/deletemovie/" + id)
+      .then((res) => {
+        console.log("deleted");
+        window.location.reload();
+      })
+      .catch((err) => console.error(err));
+  };
   return (
     <div className="d-flex vh-100 bg-primary-subtle justify-content-center align-items-center">
       <div className="w-50 bg-white rounded p-3">
@@ -33,7 +44,7 @@ function Movie() {
           <tbody>
             {movies.map((movie) => {
               return (
-                <tr key={movie.id}>
+                <tr key={movie._id}>
                   <td>{movie.title}</td>
                   <td>{movie.genre}</td>
                   <td>
@@ -41,10 +52,18 @@ function Movie() {
                   </td>
                   <td>{movie.leadActor}</td>
                   <td>
-                    <Link to="/update" className="btn btn-success btn-sm ml-1">
+                    <Link
+                      to={`/getmovie/${movie._id}`}
+                      className="btn btn-success btn-sm ml-1"
+                    >
                       Edit
                     </Link>
-                    <button className="btn btn-danger btn-sm">Delete</button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={(e) => handleDelete(movie._id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
