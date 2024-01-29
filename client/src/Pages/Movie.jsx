@@ -1,20 +1,21 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
 function Movie() {
-  const [movies, setMovies] = useState([
-    {
-      id: "1",
-      title: "Leo",
-      genre: "Action",
-      releaseDate: "23/12/2023",
-      leadActor: "Vijay",
-    },
-  ]);
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001")
+      .then((res) => setMovies(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
-    <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
+    <div className="d-flex vh-100 bg-primary-subtle justify-content-center align-items-center">
       <div className="w-50 bg-white rounded p-3">
         <Link to="/create" className="btn btn-primary">
           Add +{" "}
@@ -40,8 +41,10 @@ function Movie() {
                   </td>
                   <td>{movie.leadActor}</td>
                   <td>
-                    <button className="btn btn-success">Edit</button>
-                    <button className="btn btn-danger">Delete</button>
+                    <Link to="/update" className="btn btn-success btn-sm ml-1">
+                      Edit
+                    </Link>
+                    <button className="btn btn-danger btn-sm">Delete</button>
                   </td>
                 </tr>
               );
