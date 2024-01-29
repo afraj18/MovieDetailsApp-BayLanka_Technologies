@@ -11,6 +11,7 @@ function CreateMovie() {
 
   const navigate = useNavigate();
 
+  //Add the movie and navigate to home page
   const addMovie = (e) => {
     e.preventDefault();
     axios
