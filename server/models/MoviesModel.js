@@ -5,6 +5,7 @@ const MovieSchema = mongoose.Schema({
   genre: String,
   releaseDate: String,
   leadActor: String,
+  poster: String,
 });
 
 const MovieModel = mongoose.model("movies", MovieSchema);

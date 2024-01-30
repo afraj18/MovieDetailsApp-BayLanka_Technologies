@@ -2,6 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, "../client/public/images");
+  },
+  filename: function (req, file, cb) {
+    return cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 const MovieModel = require("./models/MoviesModel");
 
@@ -14,8 +26,24 @@ const connectionString = process.env.DB_CONNECTION_STRING;
 mongoose.connect(connectionString);
 
 //API Reqests
-app.post("/create", (req, res) => {
-  MovieModel.create(req.body)
+// app.post("/create", (req, res) => {
+//   MovieModel.create(req.body)
+//     .then((movies) => res.json(movies))
+//     .catch((err) => res.json(err));
+// });
+
+app.post("/create", upload.single("poster"), (req, res) => {
+  const { title, genre, releaseDate, leadActor } = req.body;
+  const poster = req.file;
+  const posterPath = poster ? poster.path : null;
+
+  MovieModel.create({
+    title,
+    genre,
+    releaseDate,
+    leadActor,
+    poster: posterPath,
+  })
     .then((movies) => res.json(movies))
     .catch((err) => res.json(err));
 });

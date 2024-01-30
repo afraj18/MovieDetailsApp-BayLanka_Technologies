@@ -25,51 +25,79 @@ function Movie() {
       })
       .catch((err) => console.error(err));
   };
+
   return (
-    <div className="d-flex vh-100 bg-primary-subtle justify-content-center align-items-center">
-      <div className="w-50 bg-white rounded p-3">
-        <Link to="/create" className="btn btn-primary">
-          Add +{" "}
+    <div className="d-flex  bg-primary-subtle justify-content-center align-items-center">
+      <div className="w-75 bg-white rounded m-3 p-3">
+        <Link to="/create" className="btn btn-primary mb-3">
+          Add +
         </Link>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Movie Title</th>
-              <th>Genre</th>
-              <th>Release Date</th>
-              <th>Lead Actor</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((movie) => {
-              return (
-                <tr key={movie._id}>
-                  <td>{movie.title}</td>
-                  <td>{movie.genre}</td>
-                  <td>
-                    <input type="date" disabled value={movie.releaseDate} />
-                  </td>
-                  <td>{movie.leadActor}</td>
-                  <td>
+
+        <div className="row row-cols-1 row-cols-md-3 g-4">
+          {movies.map((movie) => {
+            const path = movie.poster;
+
+            // 1. Split the path using the forward slash
+            const parts = path.split("/");
+
+            // 2. Get the last element (assumed to be the filename)
+            const filename = parts[parts.length - 1];
+
+            return (
+              <div key={movie._id} className="col-md-4 mb-4">
+                <div className="card h-100 shadow">
+                  <Link
+                    to={`/getmovie/${movie._id}`}
+                    className="text-decoration-none text-dark"
+                  >
+                    <img
+                      src={`../../public/images/${filename}`}
+                      className="card-img-top rounded-top"
+                      alt="Movie Poster"
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{movie.title}</h5>
+                      <p className="card-text">
+                        <strong>Genre:</strong> {movie.genre}
+                      </p>
+                      <p className="card-text">
+                        <strong>Release Date:</strong>{" "}
+                        {new Date(movie.releaseDate).toLocaleDateString()}
+                      </p>
+                      <p className="card-text">
+                        <strong>Lead Actor:</strong> {movie.leadActor}
+                      </p>
+                    </div>
+                  </Link>
+                  <div className="card-footer d-flex justify-content-between align-items-center">
+                    <Link
+                      to={`/viewmoviedetails/${movie._id}`}
+                      className="btn btn-outline-info"
+                      style={{ width: "120px" }}
+                    >
+                      View
+                    </Link>
                     <Link
                       to={`/getmovie/${movie._id}`}
-                      className="btn btn-success btn-sm ml-1"
+                      className="btn btn-outline-success "
+                      style={{ width: "60px" }}
                     >
                       Edit
                     </Link>
                     <button
-                      className="btn btn-danger btn-sm"
-                      onClick={(e) => handleDelete(movie._id)}
+                      className="btn btn-outline-danger"
+                      onClick={() => handleDelete(movie._id)}
+                      style={{ width: "75px" }}
                     >
                       Delete
                     </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
